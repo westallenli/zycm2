@@ -1,0 +1,133 @@
+.workflow-bar{position:sticky;top:var(--workflow-header-height,0px);z-index:80;display:flex;align-items:center;gap:14px;min-height:58px;padding:8px 24px;box-sizing:border-box;border-bottom:1px solid #d8e3ec;background:#f0f6fb;color:#183d58}.workflow-bar form{margin:0;flex-shrink:0}.workflow-bar .lz-btn{white-space:nowrap;font-size:13px}.workflow-status{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;min-width:0}.workflow-status small{display:none}.workflow-status span{font-size:12px;color:#496478}.workflow-instruction{flex:1;margin:0;font-size:13px;min-width:0;overflow-wrap:anywhere}.workflow-bar.direct{min-height:40px;padding-top:5px;padding-bottom:5px}.workflow-bar.direct strong{flex:1;overflow-wrap:anywhere}.workflow-bar.direct a{font-size:13px}.workflow-intro h1{font-size:27px;margin:8px 0}.workflow-intro p{color:#526b7d}.workflow-choices{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:1000px;margin:28px auto}.workflow-choice-card{padding:32px;border:1px solid #d7e3ed;border-radius:18px;background:#fff;box-shadow:0 10px 30px #17446b0c}.workflow-choice-card h2{font-size:25px;margin:18px 0 10px}.workflow-choice-card p{font-size:15px;min-height:44px}.workflow-choice-card button{width:100%;min-height:54px;font-size:18px}.workflow-icon{font-size:25px;color:#2872a6}.workflow-overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}.workflow-step{position:relative;padding:18px;border:1px solid #d7e3ed;border-radius:12px;background:#fff;min-width:0}.workflow-step.selected{border:2px solid #246da6;background:#f3f8fd}.workflow-step>span{color:#437493;font-size:13px}.workflow-step h2{font-size:17px;margin:8px 0}.workflow-step p{font-size:12px;color:#526b7d}.workflow-step form{margin:0}.workflow-current .sop-path{list-style:none;display:flex;gap:8px;padding:0}.workflow-current .sop-path li{flex:1;min-width:0}.workflow-current .sop-path button{width:100%;padding:12px 6px;border:1px solid #d6e3ed;background:#fff;border-radius:10px;cursor:pointer}.workflow-current .sop-path button[aria-pressed=true]{background:#eaf3fb;border-color:#246da6}.workflow-current .sop-path span,.workflow-current .sop-path b,.workflow-current .sop-path small{display:block}.workflow-current .sop-path small{font-size:11px;color:#526b7d;margin-top:6px}.workflow-current .sop-action-card{padding:18px;background:#f5f9fc;border-radius:12px}.workflow-current .sop-action-card h4{margin-top:0}.workflow-current .sop-confirm,.workflow-current .sop-owner{font-size:13px;color:#526b7d}.workflow-functions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.workflow-functions a{color:#194769;text-decoration:none}.workflow-functions h2{font-size:20px}.workflow-current [hidden]{display:none!important}body[data-global-workflow] .sand-workflow,body[data-global-workflow] .sop-next{display:none!important}body[data-global-workflow] .sand-work-detail{max-height:calc(100% - 24px)}body[data-global-workflow] .lz-topbar{position:sticky;top:0;z-index:90}
+.workflow-instruction-compact{display:none}
+body.lz-page .workflow-overview .workflow-step.completed{background:#e6f4ea;border-color:#7eaf8a}body.lz-page .workflow-overview .workflow-step.pending{background:#f0f2f5;border-color:#c5ccd5}body.lz-page .workflow-overview .workflow-step.selected{outline:2px solid #246da6;outline-offset:1px;box-shadow:none}body.lz-page .workflow-overview .workflow-step.completed p{color:#24683a}body.lz-page .workflow-overview .workflow-step.pending p{color:#596576}.workflow-legend{display:flex;flex-wrap:wrap;gap:12px}.workflow-legend .legend-completed{color:#24683a}.workflow-legend .legend-pending{color:#596576}.assistant-phase{display:inline-block;padding:3px 10px;border-radius:6px;font-size:14px!important}.assistant-phase.completed{background:#d4eddb;color:#225e35}.assistant-phase.pending{background:#e4e8ed;color:#475568}body.lz-page .assistant-compact>.assistant-result{display:flex;align-items:center;gap:12px;padding:8px 10px;background:#f7f9fc}body.lz-page .assistant-compact>.assistant-result small{font-size:11px}body.lz-page .assistant-compact>section{padding:10px 0}.assistant-compact .assistant-action-list ul,.assistant-compact .assistant-manual-list ul{list-style:none;margin:0;padding:0}.assistant-compact .assistant-action-list li{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0;padding:7px 0;border-bottom:1px solid #edf1f5;font-size:13px}.assistant-action-status{white-space:nowrap;flex-shrink:0;font-size:12px}.assistant-action-status.done{color:#24683a}.assistant-action-status.waiting{color:#8a5d17}.assistant-compact .assistant-manual-list li{display:flex;align-items:center;gap:10px;padding:8px 0;margin:0;border-bottom:1px solid #edf1f5;font-size:13px}.assistant-manual-list li>div{flex:1;min-width:0;overflow-wrap:anywhere}.assistant-manual-list li>div small{display:block;font-size:11px;color:#526b7d;margin-top:3px}.assistant-manual-list form{margin:0;flex-shrink:0}body.lz-page .assistant-manual-list .lz-btn{min-height:30px;padding:4px 10px;font-size:11px}.assistant-evidence>summary{font-size:12px!important}.assistant-compact .assistant-details{margin-top:12px}.assistant-details .assistant-result{display:none}
+@media(max-width:700px){body.lz-page .assistant-compact>.assistant-result{gap:8px}.assistant-compact .assistant-action-list li,.assistant-compact .assistant-manual-list li{font-size:12px}.assistant-compact .assistant-manual-list li{gap:6px}.assistant-action-status{font-size:11px}.workflow-legend{gap:8px}}
+.workflow-inbox-link{font-size:12px;color:#164e9c;white-space:nowrap;font-weight:700}.assistant-report{color:#183d58}.assistant-result{padding:12px 14px;background:#eaf3fb;border-radius:10px}.assistant-result>b{font-size:18px}.assistant-result p{margin:5px 0;font-size:14px}.assistant-result small{display:block;font-size:12px;line-height:1.5;color:#526b7d}body.lz-page .assistant-report>section{padding:12px 0;margin:0;border:0;border-bottom:1px solid #e3edf5}.assistant-report h3{font-size:16px;margin:0 0 7px}.assistant-report ul{margin:6px 0;padding-left:20px}.assistant-report li{margin:4px 0;line-height:1.6;font-size:13px}.assistant-report p{font-size:13px;line-height:1.6}.assistant-progress h3{color:#246da6}.assistant-decisions h3{color:#82551e}.assistant-request{padding:8px 10px;background:#f5f9fc;border-radius:8px;margin:6px 0;font-size:13px}.assistant-request p{margin:5px 0}.assistant-report>details{margin-top:12px}.assistant-report>details>summary{cursor:pointer;font-size:13px;color:#246da6}.assistant-error{color:#9b3d2a}.assistant-inbox-card label{display:block;font-size:13px;margin:10px 0}.assistant-inbox-card textarea,.assistant-inbox-card input:not([type=hidden]),.assistant-inbox-card select{display:block;width:100%;max-width:720px;box-sizing:border-box;margin-top:5px;padding:9px;border:1px solid #c8dbea;border-radius:7px;font:inherit}.assistant-inbox-card textarea{min-height:100px}.assistant-inbox-card form{margin-top:12px}
+@media(max-width:700px){.workflow-inbox-link{grid-column:1/-1}.assistant-result{padding:10px}.assistant-result>b{font-size:16px}.assistant-result small{font-size:11px}.assistant-report h3{font-size:14px}body.lz-page .assistant-report>section{padding:10px 0}.assistant-report p,.assistant-report li{font-size:12px}}
+/* The overview selects a work area; the current action is the page's main content. */
+body.lz-page .workflow-guide-intro{display:flex;align-items:baseline;gap:4px 14px;flex-wrap:wrap;padding:0;margin:0}
+body.lz-page .workflow-guide-intro h1{order:0;font-size:21px;line-height:1.4;margin:0}
+body.lz-page .workflow-guide-intro p{order:1;font-size:12px;margin:0}
+body.lz-page .workflow-guide-intro p:last-child{order:2;flex-basis:100%;margin-top:2px}
+body.lz-page .workflow-overview{grid-template-columns:repeat(9,minmax(0,1fr));gap:6px;margin:12px 0 16px}
+body.lz-page .workflow-step{box-sizing:border-box;min-height:66px;padding:8px 7px;margin:0;line-height:18px;border:1px solid #d7e3ed;border-radius:8px}
+body.lz-page .workflow-step.selected{border-color:#246da6;background:#eaf3fb;box-shadow:inset 0 0 0 1px #246da6}
+body.lz-page .workflow-step>span{display:inline;font-size:11px;margin-right:4px}
+body.lz-page .workflow-step h2{display:inline;font-size:14px;line-height:1.5;margin:0}
+body.lz-page .workflow-step p{font-size:11px;line-height:1.4;min-height:0;margin:5px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.lz-page .workflow-step form{position:absolute;inset:0;margin:0}
+body.lz-page .workflow-step .lz-btn{position:absolute;inset:0;width:100%;height:100%;min-height:44px;padding:0;border:0;border-radius:8px;background:transparent;color:transparent;font-size:0;box-shadow:none;cursor:pointer}
+body.lz-page .workflow-step .lz-btn:hover{background:#246da612}
+body.lz-page .workflow-step .lz-btn:focus-visible{outline:3px solid #246da6;outline-offset:2px}
+body.lz-page .workflow-current{padding:20px 24px}
+body.lz-page .workflow-current>h2{font-size:22px;margin:0 0 10px}
+body.lz-page .workflow-current .sop-path{margin:12px 0}
+body.lz-page .workflow-current .sop-action-card>section{border:0;padding:0;margin:0}
+@media(max-width:1050px){body.lz-page .workflow-overview{grid-template-columns:repeat(3,minmax(0,1fr))}body.lz-page .workflow-step{min-height:54px;padding:6px 9px}}
+@media(max-width:700px){body.lz-page .workflow-guide-intro{gap:2px 8px}body.lz-page .workflow-guide-intro h1{font-size:18px}body.lz-page .workflow-guide-intro p{font-size:11px}body.lz-page .workflow-overview{gap:5px;margin:8px 0 12px}body.lz-page .workflow-step{min-height:50px;padding:5px 6px}body.lz-page .workflow-step h2{font-size:13px}body.lz-page .workflow-step>span{font-size:10px;margin-right:2px}body.lz-page .workflow-step p{font-size:10px;margin-top:3px}body.lz-page .workflow-current{padding:14px}body.lz-page .workflow-current>h2{font-size:19px;margin-bottom:8px}body.lz-page .workflow-current .sop-path{gap:5px;margin:9px 0}body.lz-page .workflow-current .sop-path button{padding:7px 3px}body.lz-page .workflow-current .sop-path span,body.lz-page .workflow-current .sop-path b{display:inline}body.lz-page .workflow-current .sop-path span{margin-right:3px}body.lz-page .workflow-current .sop-path small{margin-top:3px}body.lz-page .workflow-current .sop-action-card{padding:12px}body.lz-page .workflow-current .sop-action-card p{font-size:13px;line-height:1.5;margin:8px 0}body.lz-page .workflow-current .sop-action-card h4{margin-bottom:8px}}
+.workflow-choice-card .lz-btn{height:auto!important;min-height:64px!important;font-size:23px!important;font-weight:700!important;background:#164e9c!important;color:#fff!important;letter-spacing:1px;border-radius:12px!important;padding:14px!important;line-height:1.4!important}.workflow-choice-card .lz-btn:hover{background:#103f81!important}.workflow-choice-card .lz-btn:focus-visible{outline:3px solid #163852;outline-offset:4px}.workflow-choice-card p{font-size:15px;line-height:1.6;min-height:0;margin:16px 0;color:#24475f}.workflow-intro{border:0!important}.workflow-choice-card{padding:26px}
+@media(max-width:700px){.workflow-bar{padding:8px 12px;gap:7px;flex-wrap:wrap;min-height:0}.workflow-bar.guide{display:grid;grid-template-columns:minmax(0,1fr) auto auto}.workflow-status{width:100%;gap:7px;grid-column:1/-1}.workflow-instruction{font-size:12px;white-space:nowrap}.workflow-instruction-full{display:none}.workflow-instruction-compact{display:inline}.workflow-bar .lz-btn{padding:7px;font-size:12px}.workflow-bar.direct{flex-wrap:nowrap;font-size:12px}.workflow-choices{grid-template-columns:1fr;gap:14px;margin:18px 0}.workflow-choice-card{padding:22px}.workflow-choice-card h2{font-size:22px;margin:10px 0}.workflow-choice-card p{min-height:0;font-size:13px}.workflow-choice-card button{min-height:48px}.workflow-overview{gap:7px}.workflow-step{padding:10px 7px}.workflow-step h2{font-size:13px}.workflow-step .lz-btn{padding:6px;font-size:11px}.workflow-step p{font-size:11px;min-height:28px}.workflow-current .sop-path button{padding:8px 3px;font-size:12px}.workflow-functions{grid-template-columns:1fr 1fr}.workflow-functions h2{font-size:17px}.workflow-intro h1{font-size:23px}}
+@media(max-width:700px){.workflow-intro h1{font-size:21px;line-height:1.3}.workflow-intro h2{font-size:18px;margin:10px 0}.workflow-intro p{font-size:12px;margin:8px 0}.workflow-choices{gap:12px;margin:14px 0}.workflow-choice-card{padding:18px}.workflow-icon{font-size:21px}.workflow-choice-card p{margin:8px 0 12px}.workflow-choice-card .lz-btn{min-height:60px!important;font-size:22px!important}}
+
+/* 使用方式选择页重做：整卡可点、少小字、层级清楚 */
+.workflow-intro[data-workflow-choice]{max-width:1000px;margin:26px auto 0}
+.workflow-intro[data-workflow-choice] .wf-state{font-size:12px;color:#7b8a9c;margin:0 0 6px}
+.workflow-intro[data-workflow-choice] h1{font-size:30px;line-height:1.25;margin:0 0 8px;color:#0f2740}
+.workflow-intro[data-workflow-choice] .wf-meta{font-size:12.5px;color:#93a1b1;margin:0}
+.workflow-choices{max-width:1000px;margin:22px auto 0;gap:20px}
+.wf-card{margin:0}
+.wf-card>button{width:100%;min-height:148px;display:flex;flex-direction:column;align-items:flex-start;
+  justify-content:center;gap:9px;padding:26px 28px;border:1px solid #dbe4ef;border-radius:20px;
+  background:#fff;cursor:pointer;text-align:left;box-shadow:0 10px 30px #17446b0c;
+  transition:border-color .15s,box-shadow .15s}
+.wf-card>button:hover{border-color:#9db8d6;box-shadow:0 16px 36px #17446b18}
+.wf-card>button:focus-visible{outline:3px solid #2c6cb0;outline-offset:3px}
+.wf-card b{font-size:24px;font-weight:600;color:#16456e;letter-spacing:.5px}
+.wf-card span{font-size:13.5px;color:#64748b}
+.wf-foot{max-width:1000px;margin:18px auto 44px;display:flex;gap:12px;flex-wrap:wrap}
+.wf-foot .lz-btn{height:34px;line-height:32px;font-size:13px}
+
+/* 环节详情：一个编号待办清单，能收集的标"已收集"，要人办的给按钮 */
+/* 每一步的四行说明书：干什么／参谋已做／你要做／做完标志 */
+.nine-guide{margin:10px 0 0;padding:12px 14px;border:1px solid #e2ebf5;border-radius:14px;background:#f8fbff}
+.nine-guide p{display:flex;gap:10px;align-items:baseline;margin:0;padding:5px 0}
+.nine-guide p+p{border-top:1px dashed #e2ebf5}
+.nine-guide i{flex:0 0 auto;width:64px;font-style:normal;font-size:11.5px;color:#8fa3b6}
+.nine-guide b{flex:1;min-width:0;font-size:13.5px;font-weight:500;color:#23415c;line-height:1.55}
+.nine-guide b.ok{color:#2c6b52}
+.nine-guide b.me{color:#14405f;font-weight:600}
+@media(max-width:700px){
+  .nine-guide{padding:10px 11px}
+  .nine-guide p{flex-direction:column;gap:2px}
+  .nine-guide i{width:auto}
+  .nine-guide b{font-size:13px}
+}
+
+/* 主操作按钮：和上面"你要做"那句一一对应 */
+.nine-do{margin:12px 0 0}
+.nine-do .lz-btn{height:40px;line-height:38px;padding:0 22px;font-size:14px;border-radius:999px}
+/* 系统提醒：主操作下面是"另外要注意的"，不再抢主位 */
+.assistant-remind{margin:16px 0 0;font-size:12px;color:#8a6320;font-weight:600}
+/* 缺口派单：一条缺口一行，选人 + 期限 + 派给他 */
+.gap-title{margin:16px 0 0;font-size:12px;color:#8a6320;font-weight:600}
+.gap-list{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.gap-list>li{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;
+  border:1px solid #efe3cd;border-radius:12px;background:#fffdf8}
+.gap-list>li>span{flex:1;min-width:180px;font-size:12.5px;color:#5a4a2a;line-height:1.6}
+.gap-list .gap-assign{display:flex;gap:6px;align-items:center;margin:0;flex-wrap:wrap}
+.gap-list .lz-select{height:32px;font-size:12.5px;padding:0 8px}
+.gap-list .lz-btn{height:32px;line-height:30px;font-size:12.5px;padding:0 14px}
+.gap-list>li.gap-done{background:#f5fbf7;border-color:#cfe8da}
+.gap-list>li.gap-done b{font-size:12px;color:#227a54;font-weight:600}
+@media(max-width:700px){
+  .gap-list>li{gap:6px}
+  .gap-list>li>span{flex:1 1 100%}
+  .gap-list .gap-assign{flex:1 1 100%}
+  .gap-list .gap-assign .lz-btn{flex:1 1 100%}
+}
+
+/* 次要去处：文字链接，不做第二个主按钮 */
+.assistant-extra{margin:8px 0 0}
+.assistant-extra a{font-size:12.5px;color:#1d5f9c;text-decoration:none;border-bottom:1px dashed #9db8d6}
+/* 第 3 步的缺口清单：说清缺什么、谁去补 */
+.assistant-gap{margin:8px 0 0;padding-left:20px}
+.assistant-gap li{font-size:12.5px;color:#5a4a2a;line-height:1.75}
+/* 一屏只留一个主按钮：提醒里的动作用文字链接，不做成第二个大按钮 */
+.assistant-remind + .assistant-todo .lz-btn{height:auto;line-height:1.5;padding:0;
+  background:none;border:0;color:#1d5f9c;font-size:12.5px;text-decoration:underline}
+
+.assistant-todo{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.assistant-todo li{display:flex;align-items:center;gap:10px;padding:11px 13px;
+  border:1px solid #dbe4ef;border-radius:12px;background:#fff}
+.assistant-todo i{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:#eaf2fb;
+  color:#1d5f9c;font-style:normal;font-size:12px;font-weight:600;display:grid;place-items:center}
+.assistant-todo div{flex:1;min-width:0}
+.assistant-todo b{display:block;font-size:14px;font-weight:600;color:#14405f}
+.assistant-todo small{font-size:11.5px;color:#8494a6}
+.assistant-todo em{flex:0 0 auto;font-style:normal;font-size:12px;color:#a05a1a}
+.assistant-todo .lz-btn{flex:0 0 auto;height:30px;line-height:28px;font-size:12.5px;padding:0 12px}
+.assistant-todo li.done{background:#fafcfb;border-color:#e3eee8}
+.assistant-todo li.done i{background:#e6f4ec;color:#227a54}
+.assistant-todo li.done em{color:#227a54}
+.assistant-done{margin:12px 0 0;padding:10px 12px;border:1px solid #cdeadd;border-radius:10px;
+  background:#eefaf3;font-size:13px;color:#1f7a53}
+/* 已收集的收成一行，展开才看明细 */
+.assistant-collected{margin-top:10px;border-top:1px solid #e6eef5;padding-top:8px}
+.assistant-collected>summary{cursor:pointer;font-size:12px;color:#6b8aa5}
+.assistant-collected ul{margin:8px 0 0;padding-left:18px}
+.assistant-collected li{font-size:12px;color:#8494a6;line-height:1.7}
+@media(max-width:700px){
+  .assistant-todo li{flex-wrap:wrap;gap:6px 8px}
+  .assistant-todo em{order:3}
+  .assistant-todo .lz-btn{flex:1 1 100%;height:38px;line-height:36px}
+}
+@media(max-width:700px){
+  .workflow-intro[data-workflow-choice]{margin:14px auto 0}
+  .workflow-intro[data-workflow-choice] h1{font-size:21px}
+  .workflow-intro[data-workflow-choice] .wf-meta{font-size:11.5px}
+  .workflow-choices{gap:12px;margin:14px 0 0}
+  .wf-card>button{min-height:104px;padding:18px 20px;border-radius:16px}
+  .wf-card b{font-size:20px}
+  .wf-card span{font-size:12.5px}
+  .wf-foot{margin:14px auto 28px}
+}

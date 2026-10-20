@@ -1,0 +1,19 @@
+# Reviewed threshold rules: which sensor observations may move which domain
+# condition claims (doc 11 §7 P8-T3). A threshold crossing updates the claim to
+# OBSERVED — never VERIFIED; ingestion is not verification.
+
+schema_version: 1
+thresholds:
+  - subject: "water:W1"
+    metric: water_level_m
+    site: sx-hanjiang-001
+    op: ">="
+    value: 3.0
+    met_value: "confirmed"
+    not_met_value: "unknown"
+  - subject: "weather:wind"
+    metric: wind_speed_m_s
+    op: ">="
+    value: 10.0
+    met_value: "high"
+    not_met_value: "low"

@@ -1,0 +1,180 @@
+# Forest-fire domain materials, reviewed configuration (doc 11 §7 P6-T4).
+# Editing this file changes staffing and materials with zero Python changes.
+# The loader rejects missing dependencies and malformed entries explicitly —
+# nothing about geography or facts is ever guessed here.
+# 2026-08-26 起面向前台的文案一律中文（键名与枚举值保持程序接口不变）。
+
+schema_version: 1
+name: forest_fire
+objective: 在态势变化中安全地控制行动目标。
+
+condition_subjects: ["route:R2", "water:W1"]
+
+# Named references into the workspace claim dictionary.
+claim_refs:
+  route_original: "route:R1"
+  route_alternative: "route:R2"
+  water: "water:W1"
+  wind: "weather:wind"
+  fire_trend: "fire:trend"
+  team_primary: "team:T1"
+  team_reserve: "team:T2"
+
+research_summary: >-
+  已汇总当前情报，并标出尚未核验的路线与水源条件。
+analysis_summary: >-
+  已对照指挥目标，评估路线、资源、天气与火势趋势各项约束。
+red_team_summary: >-
+  已对可能把不完整信息变成冒险承诺的假设提出质疑。
+
+analysis_rules:
+  challenged_statuses: [challenged, superseded]
+  challenged_basis_risk: 原通行路线不能作为新命令的有效依据。
+  wind_ref: wind
+  fire_trend_ref: fire_trend
+  wind_high_value: high
+  fire_expanding_value: expanding
+  weather_fire_risk: 风力与火势趋势变化，需要重新评估防护部署。
+
+red_team_rules:
+  unverified_risks:
+    - subject: "route:R2"
+      risk: 备选路线尚未核验。
+    - subject: "water:W1"
+      risk: 水源可用性尚未核验。
+
+dispatch:
+  summary: 已汇总本轮议事焦点，并把需要决断的事项呈报指挥员。
+  outstanding_risk: 路线与水源核验仍未完成。
+  clear_risk: 路线与水源核验无未决缺口。
+  standing_risk: 下一个决断窗口前保持第二梯队可用。
+  evidence_claim_refs: [route_original, route_alternative, water, wind, fire_trend]
+
+logistics:
+  summary: 已在投入前核查模拟班组、预备队、水源与通信的准备情况。
+  risk: 火势趋势变化时需保留预备队容量。
+  evidence_claim_refs: [team_primary, team_reserve, water]
+  watch_ref: water
+
+fire_action:
+  summary: 已报告模拟开进的可行性，未下达任何现场命令。
+  risk: 模拟开进仍取决于路线与安全核查是否核验通过。
+  evidence_claim_refs: [team_primary, route_original, route_alternative]
+
+information:
+  summary: 已按当前证据快照拟好情况通报草稿（仅内部）。
+  risk: 对外通报在指挥所审定前一律只是草稿。
+
+disagreement:
+  topic: 第二梯队戒备状态
+  positions:
+    AnalysisAgent: 保持戒备，同步复核受影响条件。
+    RedTeamAgent: 条件未核验、未排序前，不得把戒备变成投入行动。
+  evidence_claim_refs: [route_alternative, water, wind]
+
+staffing:
+  - agent_id: ResearchAgent
+    role: research
+    work_type: fact_gap
+    question_to_answer: 哪些路线和水源条件尚未核验？
+    expected_deliverable: 带明确未知项的评估
+    dependencies: []
+    forbidden_actions: []
+  - agent_id: AnalysisAgent
+    role: analysis
+    work_type: interpretation
+    question_to_answer: 当前各项约束如何影响指挥目标？
+    expected_deliverable: 带风险的评估
+    dependencies: [ResearchAgent]
+    forbidden_actions: []
+  - agent_id: RedTeamAgent
+    role: red_team
+    work_type: risk_challenge
+    question_to_answer: 哪些假设会把不完整信息变成冒险承诺？
+    expected_deliverable: 反方质疑评估
+    dependencies: [AnalysisAgent]
+    forbidden_actions: []
+  - agent_id: DispatchChiefAgent
+    role: chief_advisor
+    work_type: execution_preparation
+    question_to_answer: 有哪些事项需要呈报指挥员决断？
+    expected_deliverable: 协同评估
+    dependencies: [ResearchAgent, AnalysisAgent, RedTeamAgent]
+    forbidden_actions: []
+  - agent_id: LogisticsSupportAgent
+    role: feasibility
+    work_type: execution_preparation
+    question_to_answer: 模拟班组、预备队、水源与通信是否就绪？
+    expected_deliverable: 可行性评估
+    dependencies: [AnalysisAgent]
+    forbidden_actions: []
+  - agent_id: FireActionAgent
+    role: feasibility
+    work_type: execution_preparation
+    question_to_answer: 不下达现场命令时，模拟开进是否可行？
+    expected_deliverable: 可行性评估
+    dependencies: [AnalysisAgent]
+    forbidden_actions: []
+  - agent_id: InformationReportingAgent
+    role: memory
+    work_type: learning
+    question_to_answer: 按当前证据能拟出什么内容的情报通报草稿？
+    expected_deliverable: 情况通报草稿
+    dependencies: [ResearchAgent]
+    forbidden_actions: ["external publication"]
+
+option_dependencies: [AnalysisAgent, RedTeamAgent]
+
+options:
+  - id: verify-conditions
+    title: 核验备选路线与水源
+    summary: 维持态势研判，先补齐缺失的路线与水源证据。
+    claim_subjects: ["route:R2", "water:W1"]
+    evidence_claim_refs: [route_alternative, water]
+    domain_role: technical_support_review
+    cost_estimate: low
+    time_estimate: short
+    reversibility: reversible
+    preconditions: []
+    no_go_conditions: []
+    risk_source: red_team
+    show_when: always
+  - id: maintain-readiness
+    title: 保持队伍戒备，守住房护目标
+    summary: 资源保持可用，参谋同步更新风险与通行条件评估。
+    claim_subjects: ["weather:wind", "fire:trend", "route:R2", "water:W1"]
+    evidence_claim_refs: [wind, fire_trend, route_alternative, water]
+    domain_role: professional_deputy_review
+    cost_estimate: low
+    time_estimate: continuous
+    reversibility: reversible
+    preconditions: []
+    no_go_conditions: []
+    risk_source: analysis
+    show_when: always
+  - id: prepare-approach-r2
+    title: 按已核验条件准备模拟开进
+    summary: 参谋可提交一套有边界的模拟开进方案，供指挥员决断。
+    claim_subjects: ["route:R2", "water:W1", "weather:wind", "fire:trend"]
+    evidence_claim_refs: [route_alternative, water, wind, fire_trend]
+    domain_role: dispatch_chief_review
+    cost_estimate: medium
+    time_estimate: medium
+    reversibility: partially_reversible
+    preconditions: ["route:R2", "water:W1"]
+    no_go_conditions: ["fire:trend"]
+    risk_source: analysis
+    show_when:
+      all_claims_verified: ["route:R2", "water:W1"]
+
+feasibility:
+  notes: 由可行性岗按规则作出的推演判定（非实测）。
+  verdicts:
+    - option_id: verify-conditions
+      status: feasible
+    - option_id: maintain-readiness
+      status: feasible
+    - option_id: prepare-approach-r2
+      status: feasible
+      unknown_status: unknown
+      blocking_refs: [route_alternative, water]

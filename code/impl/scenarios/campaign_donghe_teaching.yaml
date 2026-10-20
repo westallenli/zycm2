@@ -1,0 +1,122 @@
+# Donghe teaching scenario (P16-A): a single-day, five-wave interactive arc
+# aligned with docs 07/08 (灭火活动流程与展示对齐 / 三种方案火情变化定义).
+# Pure scenario DATA — the world evolves here; command policy stays human:
+# unlike campaign_hanjiang_72h there is NO GeneralSurrogate — the panel's
+# general decides every adoption himself.
+#
+# Narrative spine (doc 07 §3):
+#   w1 接警: a smoke report only — nothing is confirmed yet;
+#   w2 无人机首查: suspected fire point + initial line estimate (OBSERVED,
+#      imagery is evidence, never fact);
+#   w3 地形核查: original approach route verified BLOCKED (entry conditions
+#      become the key gap);
+#   w4 气象增强: wind crosses the high threshold (window narrows);
+#   w5 力量与水源: alternate route R2 and backup water W1 field-verified —
+#      the completeness gate opens and prepare-approach-r2 becomes decidable.
+#
+# Outcomes are keyed by playbook option id (the world answers only after the
+# general adopts). They mirror doc 08's three divergent futures.
+
+schema_version: 1
+campaign_id: donghe-teaching
+title: 东河林区东南侧山火处置教学演练
+domain: forest_fire
+authorized_sources: ["sensor-feed", "recon-alpha"]
+
+days:
+  - day: 1
+    label: 接警至决断
+    waves:
+      - wave_id: w1-h01-report
+        hours_elapsed: 1
+        label: 接警——东南侧发现持续烟点
+        observations:
+          - site_id: sx-donghe-smoke
+            metric: smoke_intensity_idx
+            unit: idx
+            value: 2.0
+            observed_at: "2026-08-23T10:12:00+08:00"
+          - site_id: sx-donghe-weather
+            metric: wind_speed_m_s
+            unit: m/s
+            value: 3.6
+            observed_at: "2026-08-23T10:20:00+08:00"
+        field_reports: []
+        outcomes:
+          maintain-readiness:
+            outcome: succeeded
+            observations: ["各队伍外围待命，通信畅通；烟点情况继续监视"]
+
+      - wave_id: w2-h02-uav
+        hours_elapsed: 2
+        label: 无人机首查——疑似火点定位
+        observations: []
+        field_reports:
+          - subject: fire:trend
+            value: expanding_southeast
+            status: observed
+            evidence_id: evidence-uav-w2-fire
+            summary: 无人机影像（待核验）：东南侧疑似火点转为明火，火线初判约180米并向东南发展。影像为证据，尚需第二时相确认。
+        outcomes: {}
+
+      - wave_id: w3-h04-terrain
+        hours_elapsed: 4
+        label: 地形核查——原进入道路受阻
+        observations: []
+        field_reports:
+          - subject: route:R1
+            value: blocked
+            status: verified
+            evidence_id: evidence-recon-w3-r1
+            summary: 现场侦察核实：原进入道路（R1）部分塌方受阻，短时间不可通行；坡度较大区域植被连续。
+        outcomes:
+          verify-conditions:
+            outcome: succeeded
+            observations: ["技术支持组着手核查替代路线与备用水源；一中队保持外围待命"]
+          maintain-readiness:
+            outcome: succeeded
+            observations: ["队伍原地保护下风向目标，无人机持续监测"]
+
+      - wave_id: w4-h05-windup
+        hours_elapsed: 5
+        label: 气象增强——处置窗口收窄
+        observations:
+          - site_id: sx-donghe-weather
+            metric: wind_speed_m_s
+            unit: m/s
+            value: 11.5
+            observed_at: "2026-08-23T15:05:00+08:00"
+        field_reports: []
+        outcomes:
+          verify-conditions:
+            outcome: succeeded
+            observations: ["风向西北、风力增强：火线向东南扩展风险上升，核查窗口变窄"]
+          maintain-readiness:
+            outcome: succeeded
+            observations: ["下风向风险持续上升，重点保护目标进入警戒"]
+
+      - wave_id: w5-h07-ready
+        hours_elapsed: 7
+        label: 力量核对——替代路线与水源核实
+        observations: []
+        field_reports:
+          - subject: route:R2
+            value: passable
+            status: verified
+            evidence_id: evidence-recon-w5-r2
+            summary: 侦察分队现场核实：东侧替代路线（R2）全程通行，桥涵承压满足装备要求。
+          - subject: water:W1
+            value: available
+            status: verified
+            evidence_id: evidence-recon-w5-water
+            summary: 侦察分队现场核实：东河沟谷备用水源可用，取水与管线架设条件具备。
+        outcomes:
+          prepare-approach-r2:
+            outcome: succeeded
+            observations: ["一中队沿替代路线R2进入，抵达预定隔离带；火头推进受阻，火线扩展速度开始下降"]
+          verify-conditions:
+            outcome: succeeded
+            observations: ["替代路线与备用水源核查完成，进入条件具备；火线期间继续向东南扩展约60米"]
+          maintain-readiness:
+            outcome: succeeded
+            observations: ["队伍原地待命未进入；火线向东南持续扩展约100米，接近下风向重点保护区"]

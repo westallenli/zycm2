@@ -1,0 +1,2 @@
+# PDF text extraction only; BSD-3-Clause. DOCX/XLSX use bounded ZIP/XML.
+pypdf==6.7.1

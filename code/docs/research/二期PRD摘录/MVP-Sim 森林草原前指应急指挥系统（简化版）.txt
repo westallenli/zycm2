@@ -1,0 +1,108 @@
+MVP-Sim 森林草原前指应急指挥系统（简化版）
+PRD-SIM v1.0日期：2025-12-05研发周期：6 周（可并行）目标：30 分钟搭起前指，一张图看火场，一套码管人，一键出报告
+一、定位与价值
+表格
+复制
+| 场景 | 当前痛点 | 产品价值 |
+| 火情初发 | 微信拉群、纸质签到、电话报坐标 | 30 min 内完成前指组建+人员扫码报到+火场图上传 |
+| 现场指挥 | 火场图在微信群，路径靠吼 | Web 大屏实时叠加火场图+手绘隔离带+导出 Shapefile |
+| 复盘汇报 | Excel 复制粘贴 2 天 | 1 键生成 1 页 PDF（人数+隔离带长度+物资消耗） |
+
+二、范围（MVP Only）
+✅ In Scope
+统一身份 & 组织（2 层：省-市-队伍）
+任务创建 → 二维码 → 扫码入岗
+上传火场 Shapefile → 手绘隔离带 → 30 m 缓冲区 → 导出 Shapefile
+物资库 → 二维码出入库 → 库存预警（安全库存 20%）
+一键复盘：自动拉数据 → 1 页 PDF
+❌ Out of Scope语音对讲、北斗、大屏三维、国密、三员分立、语音转写、AI 预测
+三、用户角色
+表格
+复制
+| 角色 | 职责 | 使用频次 |
+| 系统管理员 | 导入账号、预置物资库 | 低 |
+| 指挥长 | 创建任务、上传火图、导出复盘 | 高 |
+| 态势员 | 手绘隔离带、导出 Shapefile | 高 |
+| 仓库管理员 | 扫码出入库 | 高 |
+| 队员 | 扫码入岗 | 高 |
+
+四、功能列表（Story → AC）
+表格
+复制
+| 模块 | Story | 验收标准（AC） | 优先级 |
+| 身份 | 作为管理员，我希望能批量导入账号 | ①上传 Excel（姓名/手机/单位）②手机唯一③短信告知初始密码 | P0 |
+| 任务 | 作为指挥长，我希望能新建任务并生成二维码 | ①任务名：20251205-西安-鄠邑山火②一键生成 4 张二维码（前指/扑救/后勤/空中）③可下载打印 | P0 |
+| 入岗 | 作为队员，我希望能扫码加入岗位 | ①H5 表单：姓名、手机②同手机不可重复③提交后显示岗位名称 | P0 |
+| 火图 | 作为态势员，我希望能上传火场 Shapefile | ①支持 .shp/.geojson ≤20 MB②自动叠加 Leaflet 地图③失败提示解析错误 | P0 |
+| 隔离带 | 作为指挥长，我希望能手绘隔离带并导出 | ①地图点击绘线→双击结束②自动生成 30 m 缓冲区③一键导出 shp+dbf+shx ZIP | P0 |
+| 物资 | 作为仓库管理员，我希望能扫码出入库 | ①扫码枪/手机扫码②自动带出物资名称③输入数量→提交即加减库存 | P0 |
+| 预警 | 作为系统，我需低库存预警 | ①安全库存默认 20%②每日短信 1 次③后台可改阈值 | P0 |
+| 复盘 | 作为复盘员，我希望能一键生成报告 | ①自动拉：人员表、隔离带长度、物资流水②生成 1 页 PDF③耗时 ≤2 min | P0 |
+
+五、数据模型（核心表）
+sql
+复制
+-- 统一身份user(id, name, phone, unit_code, status, pwd_hash, create_time)
+unit(code, name, parent_code)
+-- 任务与入岗
+task(id, name, create_time)
+qrcode(id, task_id, role_name, url)
+person(id, task_id, role_name, name, phone, join_time)
+-- 火图与隔离带
+fire_layer(id, task_id, filename, geom, upload_time)
+isoline(id, task_id, geom, buffer_geom, length_km, create_time)
+-- 物资
+item(id, name, spec, unit, safe_stock)
+stock(id, item_id, qty, warehouse)
+stock_flow(id, item_id, type, qty, operator, time)
+-- 复盘
+report(id, task_id, pdf_url, create_time)
+六、核心接口（精简）
+复制
+POST /user/batch              // Excel 批量导入
+POST /task                    // 新建任务
+POST /qrcode/batch            // 生成二维码
+POST /person/join             // 扫码加入
+POST /fire/layer              // 上传火场文件
+POST /isoline/draw            // 保存隔离带
+GET  /isoline/export          // 导出 Shapefile
+POST /stock/scan/in|out       // 扫码出入库
+GET  /stock/warn              // 库存预警列表
+POST /report/auto             // 一键生成复盘 PDF
+GET  /report/download         // 下载 PDF
+七、原型线框（手绘→可直出）
+复制
+① 登录页：手机[   ] 验证码[   ] 登录
+② 新建任务：任务名[   ] 【生成二维码】
+③ 二维码页：4 张二维码图 + 【打印】
+④ 地图页：左侧图层树 + 手绘工具栏【绘线】【导出】
+⑤ 物资页：扫码框 + 数量输入 + 【入库】【出库】
+⑥ 复盘页：【一键生成报告】→ PDF 预览 + 【下载】
+八、验收标准（MVP 通过）
+表格
+复制
+| 场景 | 步骤 | 通过指标 |
+| 30 min 搭前指 | 新建任务→生成二维码→队员扫码 | 总耗时 ≤30 min，人员到岗率 ≥90% |
+| 火图叠加 | 上传 10 MB Shapefile | 解析 ≤15 s，地图可见火场边界 |
+| 隔离带导出 | 手绘 5 km→导出 | 自动生成 30 m 缓冲区，ZIP ≤1 MB |
+| 物资扫码 | 连续出入库 20 笔 | 库存实时更新，无负数，预警短信到达 |
+| 复盘生成 | 点击“一键生成” | 1 页 PDF ≤2 min，含人员、隔离带长度、物资消耗 |
+
+九、里程碑（6 周并行）
+表格
+复制
+| 周 | 任务 | 负责人 |
+| W1 | 身份+组织+登录 | 后端+前端 |
+| W2 | 任务+二维码+扫码入岗 | 前端+后端 |
+| W3 | 火图上传+手绘隔离带+导出 | 前端+GIS |
+| W4 | 物资库+扫码出入库+预警 | 后端+前端 |
+| W5 | 复盘 PDF+报告下载 | 后端+前端 |
+| W6 | 联调+Bugfix+验收演示 | 全员 |
+
+十、风险与应对
+表格
+复制
+| 风险 | 应对 |
+| Shapefile 解析失败 | 提供标准模板+前端校验扩展名 |
+| 二维码打印模糊 | 生成时≥300dpi+PNG 格式 |
+| 库存并发冲突 | 后端乐观锁（version 字段） |

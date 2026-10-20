@@ -1,0 +1,54 @@
+{
+  "version": "1.9.4",
+  "files": {
+    "leaflet.css": {
+      "source": "https://github.com/Leaflet/Leaflet/releases/download/v1.9.4/leaflet.zip",
+      "archive_member": "dist/leaflet.css",
+      "sha256": "a7837102824184820dfa198d1ebcd109ff6d0ff9a2672a074b9a1b4d147d04c6",
+      "bytes": 14806
+    },
+    "leaflet.js": {
+      "source": "https://github.com/Leaflet/Leaflet/releases/download/v1.9.4/leaflet.zip",
+      "archive_member": "dist/leaflet.js",
+      "sha256": "85d455b4522415f6badc42a0e7d17c919d100347d6b8958bd0dc738fdecd6d50",
+      "bytes": 147563
+    },
+    "LICENSE": {
+      "source": "https://raw.githubusercontent.com/Leaflet/Leaflet/v1.9.4/LICENSE",
+      "archive_member": null,
+      "sha256": "bbc959aaef7488b38942e7f05cfd1244351f8bce54261951ea17dd7cf60f894b",
+      "bytes": 1369
+    },
+    "images/layers-2x.png": {
+      "source": "https://github.com/Leaflet/Leaflet/releases/download/v1.9.4/leaflet.zip",
+      "archive_member": "dist/images/layers-2x.png",
+      "sha256": "066daca850d8ffbef007af00b06eac0015728dee279c51f3cb6c716df7c42edf",
+      "bytes": 1259
+    },
+    "images/layers.png": {
+      "source": "https://github.com/Leaflet/Leaflet/releases/download/v1.9.4/leaflet.zip",
+      "archive_member": "dist/images/layers.png",
+      "sha256": "1dbbe9d028e292f36fcba8f8b3a28d5e8932754fc2215b9ac69e4cdecf5107c6",
+      "bytes": 696
+    },
+    "images/marker-icon-2x.png": {
+      "source": "https://github.com/Leaflet/Leaflet/releases/download/v1.9.4/leaflet.zip",
+      "archive_member": "dist/images/marker-icon-2x.png",
+      "sha256": "00179c4c1ee830d3a108412ae0d294f55776cfeb085c60129a39aa6fc4ae2528",
+      "bytes": 2464
+    },
+    "images/marker-icon.png": {
+      "source": "https://github.com/Leaflet/Leaflet/releases/download/v1.9.4/leaflet.zip",
+      "archive_member": "dist/images/marker-icon.png",
+      "sha256": "574c3a5cca85f4114085b6841596d62f00d7c892c7b03f28cbfa301deb1dc437",
+      "bytes": 1466
+    },
+    "images/marker-shadow.png": {
+      "source": "https://github.com/Leaflet/Leaflet/releases/download/v1.9.4/leaflet.zip",
+      "archive_member": "dist/images/marker-shadow.png",
+      "sha256": "264f5c640339f042dd729062cfc04c17f8ea0f29882b538e3848ed8f10edb4da",
+      "bytes": 618
+    }
+  },
+  "license_note": "Official BSD-2-Clause text, UTF-8 LF transcription; raw license request timed out after release files were obtained"
+}

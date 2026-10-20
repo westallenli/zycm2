@@ -1,0 +1,52 @@
+# Deterministic situation-score configuration (doc 11 §6.6, P8-T2).
+# Pure function over claim values: every component maps observed categorical
+# claims to a 0..1 severity. A missing claim or an unmapped value makes that
+# component explicitly unavailable — never a guessed default.
+
+schema_version: 1
+allow_partial: false
+
+weights:
+  fire_trend: 0.25
+  wind: 0.20
+  route_access: 0.20
+  water_access: 0.20
+  personnel_readiness: 0.15
+
+components:
+  - name: fire_trend
+    subject: "fire:trend"
+    values:
+      expanding: 1.0
+      stable: 0.5
+      monitored: 0.25
+      contained: 0.0
+      controlled: 0.0
+  - name: wind
+    subject: "weather:wind"
+    values:
+      high: 1.0
+      moderate: 0.5
+      medium: 0.5
+      low: 0.0
+  - name: route_access
+    subject: "route:R2"
+    values:
+      open: 0.0
+      passable: 0.0
+      conditionally_passable: 0.5
+      degraded: 0.5
+      unknown: 1.0
+      blocked: 1.0
+  - name: water_access
+    subject: "water:W1"
+    values:
+      confirmed: 0.0
+      available: 0.0
+      unknown: 1.0
+  - name: personnel_readiness
+    subject: "team:T1"
+    values:
+      perimeter_ready: 0.0
+      staging: 0.5
+      committed_elsewhere: 1.0

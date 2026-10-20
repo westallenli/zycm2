@@ -1,0 +1,45 @@
+schema_version: "1"
+name: 灭火物资需求基线（演练版）
+basis: >-
+  依据《森林草原火灾灭火组织指挥手册》战法口径（灭火手段首选水泵接力、宜风则风宜水则水）
+  编制的演练基线；现场库存数据接入后按 docs/15 契约校准。
+crew_standard_size: 30
+profiles:
+  direct-attack:
+    name: 直接扑打（风力灭火/二号工具）
+    per_crew:
+      - {item: 风力灭火机, unit: 台, qty_per_crew: 2}
+      - {item: 二号工具, unit: 把, qty_per_crew: 4}
+      - {item: 油锯, unit: 台, qty_per_crew: 1}
+    consumables_per_hour:
+      - {item: 汽油, unit: 升, qty_per_hour: 6}
+      - {item: 机油, unit: 升, qty_per_hour: 1}
+  pump-relay:
+    name: 水泵接力灭火
+    per_crew:
+      - {item: 高压水泵, unit: 台, qty_per_crew: 1}
+      - {item: 水带, unit: 盘, qty_per_crew: 4}
+      - {item: 水枪, unit: 支, qty_per_crew: 2}
+    consumables_per_hour:
+      - {item: 汽油, unit: 升, qty_per_hour: 4}
+  fireline-cut:
+    name: 开设隔离带
+    per_crew:
+      - {item: 油锯, unit: 台, qty_per_crew: 2}
+      - {item: 割灌机, unit: 台, qty_per_crew: 2}
+      - {item: 铁锹, unit: 把, qty_per_crew: 6}
+    consumables_per_hour:
+      - {item: 汽油, unit: 升, qty_per_hour: 5}
+  burn-out:
+    name: 以火攻火点烧
+    per_crew:
+      - {item: 点火器, unit: 具, qty_per_crew: 2}
+      - {item: 风力灭火机, unit: 台, qty_per_crew: 2}
+    consumables_per_hour:
+      - {item: 汽油, unit: 升, qty_per_hour: 5}
+  mop-up:
+    name: 清理看守
+    per_crew:
+      - {item: 铁锹, unit: 把, qty_per_crew: 4}
+      - {item: 水袋, unit: 个, qty_per_crew: 6}
+    consumables_per_hour: []

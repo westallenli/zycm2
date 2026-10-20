@@ -1,0 +1,16 @@
+# Captain map and photo reporting Implementation Plan
+
+**Goal:** Approved map-first Android layout and event/team field information reports with optional 1–3 photos, each at most 1 MiB after compression.
+
+**Architecture:** Keep the existing v2 captain authorization and shared event state. A compact 56dp header and bottom navigation frame an expanding native map, with 48dp touch targets for small overlay controls. Open details/report/history in dialogs, retaining text/photos on upload failure. Store normalized JPEG attachments in the explicitly configured snapshots directory under content hashes, with transaction before-images and audited report references; authenticate every image read. Receive/decode bounded upload bodies before taking event locks. Computer intelligence panel and native assistant read the same pending-verification records; photos are viewed, never automatically interpreted or located.
+
+**Tech Stack:** Existing Java native Android API 26+, platform picker/camera intent, private content provider, Bitmap/Exif orientation normalization; existing Python/Pillow and durable storage. Same signing key, versionCode3 / 0.3.0-demo. No extra database or external services.
+
+1. Preserve current delivery source/data/maps/runtime and Git diff; copy 0.2 Android source/APK. New isolated current-data test root and read-only map hardlink. Append bounded in-progress entry to both WORKLOGs.
+2. Implement captain_reports.py: exact schemas, bounded 3x1MiB JPEG input, Pillow decode/dimension checks/metadata normalization, content hashes and protected transaction writes. Add report list/photo read/assistant source projection and computer intelligence section. Test true duplicates, different retries, foreign teams/events, damaged photos, rejected body framing, rollback/reload and protected reads.
+3. Add bounded authenticated report pre-read outside shared event/simulation locks, recheck authority inside normal scoped request. Existing unrelated handlers untouched. Exercise a slow upload while a map request returns.
+4. Native map-first layout, compact header/menu, adaptive map and overlays. Keep map instance/camera position on tab navigation/refresh when possible; show load/failure states and permit tile retry. Implement reporting dialog with optional photo capture/picker, thumbnails/removal, compression/orientation, stable request ID and safe retry after ambiguous response; preserve pending draft while camera/picker opens. Reports history is not a permanent map panel.
+5. Build 0.3 with same signing identity; logic/build/APK checks and current API regression. Use native UI if an actual device/emulator is available; otherwise document that native render/camera/touch remain to be verified, and provide a clearly labeled layout illustration for review without treating it as real-device proof.
+6. Only after tests pass, verify process identity, normally stop/back up/install limited source+APK+guide, restart current same-Wi-Fi service and verify original business data/config/maps unchanged. Update latest spec and dual logs; preserve failures and final evidence.
+
+Existing squad/command/material semantics stay unchanged. No photo recognition, GPS/map-coordinate inference, audio/video, background queue, 5G/iOS or old-demo compatibility work. No commits or agents.

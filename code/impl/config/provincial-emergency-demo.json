@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "source": "全省应急人员名单（模拟外部维护）",
+  "version": "DEMO-20261013-1",
+  "simulated": true,
+  "people": [
+    {
+      "subject_id": "13977773002",
+      "name": "演示副总指挥甲",
+      "unit": "演示省应急指挥中心",
+      "position": "应急指挥负责人",
+      "region": "演示省级"
+    },
+    {
+      "subject_id": "13977773102",
+      "name": "演示副总指挥乙",
+      "unit": "演示森林消防支队",
+      "position": "支队指挥负责人",
+      "region": "演示东部片区"
+    },
+    {
+      "subject_id": "13977773202",
+      "name": "演示副总指挥丙",
+      "unit": "演示综合救援支队",
+      "position": "救援指挥负责人",
+      "region": "演示西部片区"
+    }
+  ]
+}

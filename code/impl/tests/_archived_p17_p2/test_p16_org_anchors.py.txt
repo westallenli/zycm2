@@ -1,0 +1,260 @@
+"""P16-T12 验收：组织架构原图像素锚点标定与首页框外动态叠加。
+
+加载器 fail-closed：
+- 合法文件 → 40 框（32 slot + 8 node），仅扑救二组无角标（墨迹占满，诚实降级）；
+- 文件缺失 / JSON 损坏 / 版本不符 / 原图哈希被篡改 / rect 越界或逆序 /
+  code 重复 / 缺 badge_rect 字段 → 一律整体返回 None（回退合规侧栏）；
+- 角标区纯数学不变量：任何 badge 矩形不得与任何其他锚点框相交、必须在图内
+  （标定纪律「不遮挡原图」的常驻回归，不依赖 Pillow/numpy）。
+
+首页渲染：
+- 锚点不可用 → 无 hp-overlay、旧提示语、合规侧栏原样（fallback）；
+- 锚点可用 → 40 个透明点击区 + 名册数据预渲染隐藏面板 + 原生 JS 切换；
+- 角标只对有名册数据的槽位渲染；指挥节点面板如实标注无人员槽位；
+- 联系方式按观看者身份脱敏；本人行高亮；通信状态一律「待接入」。
+"""
+
+from __future__ import annotations
+
+import json
+import shutil
+import tempfile
+import unittest
+from pathlib import Path
+
+from panda_brain.auth import GeneralEntryAuth
+from panda_brain.fire_events import EventRegistry, EventRoster, RosterEntry
+from panda_brain.homepage import (
+    load_org_anchors,
+    render_homepage_view,
+)
+from panda_brain.models import PersonRecord
+from panda_brain.workspace import ScenarioWorkspace
+
+_REAL_STATIC = Path(__file__).resolve().parent.parent / "static"
+_SECRET = "p16-anchor-secret"
+
+
+def _copy_static(tmp: Path) -> Path:
+    dest = tmp / "static"
+    dest.mkdir(exist_ok=True)
+    shutil.copy(_REAL_STATIC / "org_chart.png", dest / "org_chart.png")
+    shutil.copy(_REAL_STATIC / "org_anchors.json", dest / "org_anchors.json")
+    return dest
+
+
+class AnchorLoaderTests(unittest.TestCase):
+    def test_load_valid_real_file(self):
+        anchors = load_org_anchors()
+        self.assertIsNotNone(anchors)
+        boxes = anchors["boxes"]
+        self.assertEqual(40, len(boxes))
+        kinds = [b["kind"] for b in boxes]
+        self.assertEqual(32, kinds.count("slot"))
+        self.assertEqual(8, kinds.count("node"))
+        codes = [b["code"] for b in boxes]
+        self.assertEqual(len(codes), len(set(codes)))
+        no_badge = [b["code"] for b in boxes if b["badge"] is None]
+        self.assertEqual(["pjjz-2"], no_badge)  # 墨迹占满：唯一诚实无角标框
+        for box in boxes:
+            x1, y1, x2, y2 = box["rect"]
+            self.assertTrue(x1 < x2 and y1 < y2)
+
+    def _mutated(self, tmp: Path, mutate) -> dict | None:
+        static = _copy_static(tmp)
+        doc = json.loads(
+            (static / "org_anchors.json").read_text(encoding="utf-8")
+        )
+        mutate(doc)
+        (static / "org_anchors.json").write_text(
+            json.dumps(doc, ensure_ascii=False), encoding="utf-8"
+        )
+        return load_org_anchors(static)
+
+    def test_fail_closed_missing_files(self):
+        with tempfile.TemporaryDirectory() as td:
+            self.assertIsNone(load_org_anchors(Path(td)))
+            self.assertIsNone(load_org_anchors(Path(td) / "no-such"))
+
+    def test_fail_closed_corrupt_json(self):
+        with tempfile.TemporaryDirectory() as td:
+            static = _copy_static(Path(td))
+            (static / "org_anchors.json").write_text("{broken", encoding="utf-8")
+            self.assertIsNone(load_org_anchors(static))
+
+    def test_fail_closed_wrong_version(self):
+        with tempfile.TemporaryDirectory() as td:
+            anchors = self._mutated(
+                Path(td), lambda d: d.update(version="org-anchors-v9")
+            )
+            self.assertIsNone(anchors)
+
+    def test_fail_closed_image_hash_mismatch(self):
+        with tempfile.TemporaryDirectory() as td:
+            static = _copy_static(Path(td))
+            raw = bytearray((static / "org_chart.png").read_bytes())
+            raw[-1] ^= 0xFF  # 翻转最后一字节：模拟原图被替换
+            (static / "org_chart.png").write_bytes(bytes(raw))
+            self.assertIsNone(load_org_anchors(static))
+
+    def test_fail_closed_rect_out_of_range_and_reversed(self):
+        with tempfile.TemporaryDirectory() as td:
+            def widen(doc):
+                doc["boxes"][3]["rect"] = [0.9, 0.1, 0.5, 0.2]  # 逆序
+
+            self.assertIsNone(self._mutated(Path(td), widen))
+
+        with tempfile.TemporaryDirectory() as td:
+            def escape(doc):
+                doc["boxes"][3]["rect"] = [0.1, 0.1, 1.2, 0.2]  # 越界
+
+            self.assertIsNone(self._mutated(Path(td), escape))
+
+    def test_fail_closed_duplicate_code(self):
+        with tempfile.TemporaryDirectory() as td:
+            def dup(doc):
+                doc["boxes"][5]["code"] = doc["boxes"][4]["code"]
+
+            self.assertIsNone(self._mutated(Path(td), dup))
+
+    def test_fail_closed_missing_badge_key(self):
+        with tempfile.TemporaryDirectory() as td:
+            def drop(doc):
+                del doc["boxes"][2]["badge_rect"]
+
+            self.assertIsNone(self._mutated(Path(td), drop))
+
+    def test_badges_never_cover_other_boxes_pure_math(self):
+        """标定纪律常驻回归：badge 区与其他框不相交、且在图内。"""
+        anchors = load_org_anchors()
+        self.assertIsNotNone(anchors)
+        w, h = anchors["size"]
+        rects_px = [
+            (
+                int(b["rect"][0] * w),
+                int(b["rect"][1] * h),
+                int(b["rect"][2] * w),
+                int(b["rect"][3] * h),
+            )
+            for b in anchors["boxes"]
+        ]
+        checked = 0
+        for i, box in enumerate(anchors["boxes"]):
+            if box["badge"] is None:
+                continue
+            checked += 1
+            bx1, by1, bx2, by2 = box["badge"]
+            self.assertTrue(0 <= bx1 < bx2 <= w)
+            self.assertTrue(0 <= by1 < by2 <= h)
+            for j, (x1, y1, x2, y2) in enumerate(rects_px):
+                if j == i:
+                    continue
+                disjoint = (
+                    bx2 < x1 - 1 or bx1 > x2 + 1
+                    or by2 < y1 - 1 or by1 > y2 + 1
+                )
+                self.assertTrue(
+                    disjoint,
+                    f"badge of box {i} ({box['code']}) intersects box {j}",
+                )
+        self.assertGreater(checked, 30)
+
+
+class HomepageOverlayTests(unittest.TestCase):
+    def setUp(self):
+        auth = GeneralEntryAuth(secret=_SECRET)
+        self.workspace = ScenarioWorkspace("p16-anchor", general_auth=auth)
+        self.workspace.unlock_general_entry(auth.authenticate(_SECRET))
+        self.registry = EventRegistry()
+        persons = [
+            PersonRecord(name="张三", phone="13912340001",
+                         unit="县防火办", home_position="扑救一组（一分区）"),
+            PersonRecord(name="李四", phone="13912340002",
+                         unit="林场哨所", home_position="供水组"),
+        ]
+        self.registry.import_person_library(persons)
+        self.workspace.import_person_library(persons)  # 工作区常备库（扫码门用）
+        # 名册：本职解析建议（张三→pjjz-1，李四→log-water）
+        self.event_id = "fire-001"
+        roster = EventRoster(event_id=self.event_id)
+        roster.entries["13912340001"] = RosterEntry(
+            phone="13912340001", pos_code="pjjz-1", resolved_from_home=True)
+        roster.entries["13912340002"] = RosterEntry(
+            phone="13912340002", pos_code="log-water", resolved_from_home=True)
+        self.registry.rosters[self.event_id] = roster
+        # 张三已到场（走工作区唯一门）
+        self.workspace.scan_check_in("pjjz-1", phone="13912340001",
+                                     operator="test")
+
+    def _render(self, **kw):
+        return render_homepage_view(
+            event_record=object(),  # 侧栏前提：已进入事件任务空间
+            event_id=self.event_id,
+            registry=self.registry,
+            workspace=self.workspace,
+            arrivals={"13912340001": "09:35"},
+            generated_at="2026-08-24 15:00",
+            viewer_phone="13912340001",
+            **kw,
+        )
+
+    def test_fallback_when_anchors_unavailable(self):
+        with tempfile.TemporaryDirectory() as td:
+            html = self._render(static_dir=Path(td))
+        self.assertNotIn('class="hp-overlay"', html)
+        self.assertNotIn('class="hp-hit"', html)
+        self.assertIn("组织结构以原图为准", html)   # 原合规提示语保持
+        self.assertIn("到场总览", html)              # 侧栏完整保留
+        self.assertIn("1/1", html)                   # 既有侧栏聚合仍工作
+
+    def test_overlay_hits_badges_and_click_panels(self):
+        html = self._render()
+        self.assertIn("hp-overlay", html)
+        self.assertEqual(40, html.count('class="hp-hit"'))
+        # 张三已到 pjjz-1：角标 1/1 绿色；李四未到 log-water：0/1 灰
+        self.assertIn(">1/1</div>", html.replace('">', '">'))
+        self.assertIn("hp-badge-ok", html)
+        self.assertIn("hp-badge-none", html)
+        self.assertIn("hp-panel-", html)
+        self.assertIn("hp-group-body", html)
+        self.assertIn("<script>(function()", html)   # 原生 JS 切换器
+        self.assertNotIn("fetch(", html)             # 不新增网络接口
+        self.assertNotIn("XMLHttpRequest", html)
+        # 点击面板为服务端预渲染的隐藏模板
+        self.assertIn('id="hp-panel-0" hidden', html)
+
+    def test_node_panel_honest_note(self):
+        html = self._render()
+        self.assertIn("该节点无常设人员槽位", html)
+        self.assertIn("不虚构人数", html)
+
+    def test_member_masking_and_me_highlight(self):
+        html = self._render(viewer_role="member")
+        # 本人（已到场张三）：完整号码 + 高亮行
+        self.assertIn("hp-me-row", html)
+        self.assertIn("13912340001", html)
+        # 他人（未到场李四）：中间四位打码
+        self.assertIn("139****0002", html)
+        self.assertNotIn(">13912340002<", html)
+        # 到场时间来自会话层注入
+        self.assertIn("09:35", html)
+        # 通信状态诚实标注
+        self.assertIn("待接入", html)
+
+    def test_commander_sees_full_phones(self):
+        html = self._render(viewer_role="commander")
+        self.assertIn("13912340002", html)
+
+    def test_no_badge_slot_still_clickable_note(self):
+        html = self._render()
+        # 扑救二组无角标是标定期 fail-closed 结果；点击面板仍然存在
+        idx = next(
+            i for i, b in enumerate(load_org_anchors()["boxes"])
+            if b["code"] == "pjjz-2"
+        )
+        self.assertIn(f'id="hp-panel-{idx}"', html)
+        self.assertIn("因无空白位无角标", html)
+
+
+if __name__ == "__main__":
+    unittest.main()

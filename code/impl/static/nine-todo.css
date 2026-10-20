@@ -1,0 +1,82 @@
+/* 九步办理环节页：编号待办清单 + 折叠记录。
+   只加新类，不改 nine-flow.css 里的既有规则。 */
+
+.nine-meta{margin:10px 0 2px;font-size:15px;color:#1d4e77}
+.nine-meta b{margin-left:6px;font-size:12px;font-weight:600;color:#a05a1a}
+
+/* 谁来完成这一步 */
+.nine-who{margin:8px 0 0;font-size:12.5px;color:#5c748b}
+.nine-who b{color:#14405f;font-weight:600}
+
+/* 主操作：上面"你要做"那句话对应的那一个按钮 */
+.nine-do{margin:12px 0 0}
+.nine-do .lz-btn{height:40px;line-height:38px;padding:0 22px;font-size:14px;border-radius:999px}
+.nine-do form{margin:0;display:flex;gap:8px;flex-wrap:wrap}
+
+/* 新手说明书：干什么／参谋已做／你要做／做完标志 */
+.nine-guide{margin:10px 0 0;padding:12px 14px;border:1px solid #e2ebf5;border-radius:14px;background:#f8fbff}
+.nine-guide p{display:flex;gap:10px;align-items:baseline;margin:0;padding:5px 0}
+.nine-guide p+p{border-top:1px dashed #e2ebf5}
+.nine-guide i{flex:0 0 auto;width:64px;font-style:normal;font-size:11.5px;color:#8fa3b6}
+.nine-guide b{flex:1;min-width:0;font-size:13.5px;font-weight:500;color:#23415c;line-height:1.55}
+.nine-guide b.ok{color:#2c6b52}
+.nine-guide b.me{color:#14405f;font-weight:600}
+@media(max-width:700px){
+  .nine-guide{padding:10px 11px}
+  .nine-guide p{flex-direction:column;gap:2px}
+  .nine-guide i{width:auto}
+  .nine-guide b{font-size:13px}
+}
+
+.nine-todo{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.nine-todo>li{display:block;padding:11px 13px;border:1px solid #dbe4ef;border-radius:12px;background:#fff}
+.nine-todo-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nine-todo-row>div:first-of-type{flex:1;min-width:170px}
+.nine-todo i{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:#eaf2fb;
+  color:#1d5f9c;font-style:normal;font-size:12px;font-weight:600;display:grid;place-items:center}
+.nine-todo b{display:block;font-size:14px;font-weight:600;color:#14405f}
+.nine-todo small{font-size:11.5px;color:#8494a6}
+.nine-todo em{flex:0 0 auto;font-style:normal;font-size:12px;color:#a05a1a}
+/* 已办完的条目：整行转灰绿，状态也不再是橙色催促 */
+.nine-todo>li.done{background:#fafcfb;border-color:#e3eee8}
+.nine-todo>li.done i{background:#e6f4ec;color:#227a54}
+.nine-todo>li.done em{color:#227a54}
+.nine-todo>li.done b{color:#3d5a4c}
+.nine-todo-act{flex:0 0 auto;display:flex;gap:8px;align-items:center}
+.nine-todo-act form{margin:0}
+
+/* 折叠按钮：summary 直接做成按钮样式，点一下展开表单 */
+.nine-act{margin:10px 0 0}
+/* 下达前只给一句摘要，不再铺开五个大框 */
+.nine-sum{margin:0 0 10px;padding:9px 11px;border-radius:10px;background:#f2f7fd;
+  border:1px solid #dbe8f6;font-size:12.5px;color:#3b6187;line-height:1.55}
+.nine-sum b{color:#14405f;font-weight:600}
+/* 遗留事项只是提示，不是待办 */
+.nine-left{margin:10px 0 0;padding:9px 11px;border-radius:10px;background:#fffaf2;
+  border:1px solid #f0e2cb;font-size:12.5px;color:#8a6320;line-height:1.55}
+.nine-left b{color:#a05a1a}
+.nine-act>summary{display:inline-flex;align-items:center;height:30px;padding:0 12px;
+  border-radius:999px;background:#1d5f9c;color:#fff;font-size:12.5px;font-weight:600;
+  cursor:pointer;list-style:none;white-space:nowrap}
+.nine-act>summary::-webkit-details-marker{display:none}
+.nine-act>summary.lz-btn2{background:#fff;color:#1d5f9c;border:1px solid #d1e4ff}
+.nine-act[open]{flex:1 1 100%}
+.nine-act form{margin-top:10px}
+
+.nine-fold{margin-top:12px;border-top:1px solid #e6eef5;padding-top:10px}
+.nine-fold>summary{cursor:pointer;font-size:12.5px;color:#3b6a92}
+.nine-fold>summary::-webkit-details-marker{color:#9fb6c9}
+
+.nine-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+
+/* 表单顶部一句话：告诉人这一屏要做什么 */
+.nine-hint{margin:0 0 10px;padding:8px 10px;border-radius:10px;background:#f2f7fd;
+  border:1px solid #dbe8f6;font-size:12.5px;color:#3b6187;line-height:1.5}
+
+@media(max-width:700px){
+  .nine-todo>li{align-items:flex-start}
+  .nine-todo-act{flex:1 1 100%;margin-top:4px}
+  .nine-act{flex:1 1 100%}
+  .nine-act>summary{width:100%;justify-content:center;height:38px}
+  .nine-links .lz-btn{flex:1 1 46%}
+}

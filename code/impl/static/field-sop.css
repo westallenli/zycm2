@@ -1,0 +1,196 @@
+/* 现场指挥待办：按 2026-10-20 参考图口径重做。
+   参考图风格：浅底、软阴影、大圆角、蓝色主色 + 橙色强调、底部一排小胶囊。
+   复用 .sop-next / .lz-btn 的位置语义；本文件只新增 .field-* 与 .field-step-*。 */
+
+:root{
+  --f-ink:#101828; --f-ink2:#667085; --f-ink3:#98a2b3;
+  --f-line:#eef2f6; --f-blue:#1d6ff2; --f-blue-bg:#eff5ff;
+  --f-orange:#ea580c; --f-orange-bg:#fff4ec; --f-orange-ink:#b54708;
+  --f-red:#f04438; --f-green:#12b76a;
+  --f-shadow:0 8px 24px rgba(16,24,40,.08);
+  --f-shadow-sm:0 2px 10px rgba(16,24,40,.06);
+}
+
+/* 气象卡在右上角（sand-command.css），任何时候不被待办压住 */
+.sand-weather,.sand-weather-reopen{z-index:940}
+
+/* ---------- 常驻条 ---------- */
+.field-more{font:inherit;font-size:11px;color:var(--f-blue);background:none;border:0;padding:0 0 0 2px;
+  cursor:pointer;text-underline-offset:2px;text-decoration:underline}
+.field-more:hover{color:#1558c9}
+
+/* ---------- 底部七环节：一排小胶囊，不再是大方块 ---------- */
+.field-step-row{display:flex;align-items:center;gap:8px;list-style:none;padding:0;margin:0;min-width:0;
+  overflow-x:auto;scrollbar-width:none}
+.field-step-row::-webkit-scrollbar{display:none}
+.field-step-row li{flex:0 0 auto;min-width:0}
+.field-pill{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 13px;
+  border:0;border-radius:999px;background:#fff;box-shadow:var(--f-shadow-sm);
+  font:12.5px/1 'Microsoft YaHei UI','Microsoft YaHei',sans-serif;color:var(--f-ink2);
+  white-space:nowrap;cursor:pointer}
+.field-pill:hover{box-shadow:0 4px 14px rgba(16,24,40,.12)}
+.field-pill[aria-expanded=true]{outline:2px solid var(--f-blue);outline-offset:1px}
+.field-pill .dot{width:6px;height:6px;border-radius:50%;background:#d0d5dd;flex-shrink:0}
+.field-pill .n{font-size:10.5px;color:var(--f-ink3);letter-spacing:.02em}
+.field-pill[data-state=done]{color:#475467}
+.field-pill[data-state=done] .dot{background:var(--f-green)}
+.field-pill[data-state=now]{background:var(--f-blue);color:#fff;box-shadow:0 4px 14px #1d6ff240}
+.field-pill[data-state=now] .dot{background:#bfd7ff}
+.field-pill[data-state=now] .n{color:#c9dcff}
+.field-pill[data-state=blocked]{background:var(--f-orange-bg);color:var(--f-orange-ink);box-shadow:0 4px 14px #ea580c22}
+.field-pill[data-state=blocked] .dot{background:var(--f-orange)}
+.field-pill[data-state=blocked] .n{color:#d97757}
+.field-pill[data-state=todo]{color:var(--f-ink3);background:#fbfcfe}
+
+/* 底部承载条：整条浅色玻璃，包裹胶囊 */
+.field-ribbon{display:flex;align-items:center;gap:14px;min-width:0}
+.field-ribbon>div:first-child{flex:0 0 auto;font-size:12.5px;color:var(--f-ink2);white-space:nowrap}
+.field-ribbon>div:first-child small{display:block;font-size:10px;color:var(--f-ink3);margin-top:2px}
+
+/* ---------- 抽屉 ---------- */
+.field-todo{position:absolute;top:206px;right:24px;bottom:118px;z-index:930;
+  width:min(392px,calc(100% - 108px));display:flex;flex-direction:column;overflow:hidden;
+  border:0;border-radius:18px;background:#fffffff5;backdrop-filter:blur(18px) saturate(1.1);
+  box-shadow:var(--f-shadow);color:var(--f-ink)}
+.field-todo[hidden]{display:none!important}
+.field-todo-bar{display:flex;align-items:center;gap:10px;min-height:48px;padding:12px 16px;
+  border-bottom:1px solid var(--f-line)}
+.field-todo-bar b{font-size:14px;font-weight:600;color:var(--f-ink)}
+.field-todo-bar span{font-size:11.5px;color:var(--f-ink3)}
+.field-todo-bar button{margin-left:auto;width:28px;height:28px;padding:0;border:0;border-radius:50%;
+  background:#f2f4f7;color:#667085;font-size:16px;line-height:1;cursor:pointer}
+.field-todo-bar button:hover{background:#e9edf3;color:#344054}
+.field-todo-body{flex:1;min-height:0;overflow:auto;padding:4px 14px 12px;scrollbar-width:thin}
+.field-todo-foot{padding:9px 16px;border-top:1px solid var(--f-line);background:#fbfcfe;
+  font-size:10.5px;color:var(--f-ink3)}
+
+/* ---------- 分组 ---------- */
+.field-group{margin-top:14px}
+.field-group>header{display:flex;align-items:baseline;gap:8px;padding-bottom:7px}
+.field-group>header b{flex:1;font-size:11.5px;font-weight:600;letter-spacing:.02em}
+.field-group>header em{font-size:11px;color:var(--f-ink3);font-style:normal}
+.field-group.field-im>header b{color:var(--f-red)}
+.field-group.field-mf>header b{color:var(--f-orange-ink)}
+.field-group.field-ad>header b{color:var(--f-blue)}
+.field-group.field-tr>header b{color:var(--f-ink2)}
+
+/* ---------- 单条：标题 + 按钮 + 折叠依据 ---------- */
+.field-todo-item{position:relative;background:#fff;border:1px solid var(--f-line);border-radius:14px;
+  padding:12px 13px;margin-top:8px;box-shadow:var(--f-shadow-sm)}
+.field-todo-item.field-im{border-color:#fecdca}
+.field-todo-item.field-mf{border-color:#fedf89}
+.field-todo-item.field-ad{border-color:#d1e4ff}
+.field-row{display:flex;align-items:center;gap:8px;min-width:0}
+.field-row h4{margin:0;flex:1;min-width:0;font-size:13.5px;font-weight:600;color:var(--f-ink);
+  line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.field-who{flex-shrink:0;font-size:11px;color:var(--f-ink3);max-width:92px;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.field-tag{flex-shrink:0;font-size:10px;line-height:1;padding:3px 6px;border-radius:4px;
+  white-space:nowrap;border:1px solid transparent}
+.field-tag.field-im{color:var(--f-red);background:#fef3f2;border-color:#fecdca}
+.field-tag.field-mf{color:var(--f-orange-ink);background:var(--f-orange-bg);border-color:#fedf89}
+.field-tag.field-ad{color:var(--f-blue);background:var(--f-blue-bg);border-color:#d1e4ff}
+.field-tag.field-tr{color:var(--f-ink2);background:#f2f4f7;border-color:#eef2f6}
+.field-step{flex-shrink:0;font-size:10.5px;color:var(--f-ink3);letter-spacing:.03em}
+.field-act{margin-top:10px;display:flex}
+/* 用 flex 垂直居中，不靠 line-height——否则 height 与 padding 一改文字就偏 */
+.field-act .lz-btn{display:inline-flex;align-items:center;justify-content:center;
+  height:34px;line-height:1;padding:0 16px;font-size:12.5px;border-radius:999px;white-space:nowrap}
+.field-act .field-btn-warn{background:var(--f-orange);border-color:var(--f-orange);color:#fff}
+.field-act .field-btn-warn:hover{background:#d94e08}
+
+/* 折叠依据 */
+.field-basis{margin-top:9px;padding-top:7px;border-top:1px solid var(--f-line)}
+.field-basis>summary{cursor:pointer;list-style:none;font-size:10.5px;color:var(--f-ink3);
+  display:flex;align-items:center;gap:4px}
+.field-basis>summary::-webkit-details-marker{display:none}
+.field-basis>summary:before{content:'▸';font-size:9px}
+.field-basis[open]>summary:before{content:'▾'}
+.field-five{display:grid;grid-template-columns:64px minmax(0,1fr);gap:4px 9px;margin:8px 0 0;font-size:11.5px}
+.field-five dt{color:var(--f-ink3);font-size:10.5px;padding-top:1px}
+.field-five dd{margin:0;color:#475467;line-height:1.55}
+.field-src{margin:7px 0 0;font-size:10px;color:#b0b8c4;overflow-wrap:anywhere}
+.field-empty{margin:14px 0;font-size:12px;color:var(--f-ink3)}
+
+/* ---------- 常驻条：中间偏下，浮在底部条上方 ---------- */
+.field-next{position:absolute;bottom:104px;left:50%;transform:translateX(-50%);z-index:927;
+  width:min(460px,calc(100% - 120px));background:#fff;border-radius:18px;box-shadow:var(--f-shadow);
+  padding:13px 15px}
+.field-next [data-sop-recommendation]{display:grid;grid-template-columns:1fr auto;align-items:center;gap:3px 10px}
+.field-next span,.field-next small{font-size:10.5px;color:var(--f-ink3)}
+.field-next b{font-size:14.5px;color:var(--f-ink);line-height:1.35}
+.field-next small{grid-column:1/-1}
+.field-next .lz-btn{grid-column:2;grid-row:1/3;display:inline-flex;align-items:center;justify-content:center;
+  height:38px;line-height:1;padding:0 15px;font-size:11.5px;border-radius:999px;background:var(--f-blue);
+  color:#fff;text-decoration:none;font-weight:600;white-space:nowrap;border:0}
+.field-next .field-btn-warn{background:var(--f-orange)}
+
+/* ---------- 底部承载条：替掉原九项，一排小胶囊 ---------- */
+.field-dock{position:absolute;bottom:22px;left:24px;right:24px;z-index:950;display:flex;align-items:center;
+  padding:11px 20px;min-height:60px;background:#fffffff5;border-radius:999px;box-shadow:var(--f-shadow)}
+.field-dock .field-ribbon{flex:1;min-width:0}
+.field-wf-link{flex:0 0 auto;font-size:11.5px;color:var(--f-blue);text-decoration:none;white-space:nowrap;
+  padding-left:12px;border-left:1px solid var(--f-line)}
+.field-wf-link:hover{text-decoration:underline}
+
+/* ---------- 环节面板：点胶囊看这一步的内容（与抽屉同位置，互斥） ---------- */
+.field-step-panel{position:absolute;top:206px;right:24px;bottom:118px;z-index:931;
+  width:min(420px,calc(100% - 108px));display:flex;flex-direction:column;overflow:hidden;
+  border:0;border-radius:18px;background:#fffffff7;backdrop-filter:blur(18px) saturate(1.1);
+  box-shadow:var(--f-shadow);color:var(--f-ink)}
+.field-step-panel[hidden]{display:none!important}
+.field-sp-bar{display:flex;align-items:center;gap:10px;min-height:48px;padding:12px 16px;
+  border-bottom:1px solid var(--f-line)}
+.field-sp-bar b{font-size:14px;font-weight:600}
+.field-sp-bar span{font-size:11px;color:var(--f-ink3)}
+.field-sp-bar button{margin-left:auto;width:28px;height:28px;padding:0;border:0;border-radius:50%;
+  background:#f2f4f7;color:#667085;font-size:16px;line-height:1;cursor:pointer}
+.field-sp-body{flex:1;min-height:0;overflow:auto;padding:6px 14px 14px;scrollbar-width:thin}
+.field-sp-head{display:flex;align-items:baseline;gap:8px;margin:8px 0 6px;flex-wrap:wrap}
+.field-sp-head b{font-size:13px;font-weight:600;color:var(--f-blue)}
+.field-sp-head span{font-size:11px;color:var(--f-ink3)}
+.field-sp-purpose{margin:0 0 6px;font-size:12px;line-height:1.5;color:#475467}
+/* 做完的标志：让人知道这一步什么时候算完 */
+.field-sp-done{margin:0 0 10px;font-size:11.5px;line-height:1.5;color:#7a8b9c}
+/* 底部操作行：链接一律做成按钮，不要求人读懂路径 */
+.field-sp-actions{display:flex;gap:8px;margin-top:10px;padding-top:9px;border-top:1px solid var(--f-line)}
+.field-sp-btn,.field-sp-btn2{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;
+  height:32px;padding:0 14px;border-radius:999px;font:12px/1 inherit;font-weight:600;
+  cursor:pointer;text-decoration:none;white-space:nowrap}
+.field-sp-btn{background:var(--f-blue);color:#fff;border:1px solid var(--f-blue)}
+.field-sp-btn:hover{background:#1558c9}
+.field-sp-btn2{background:#fff;color:var(--f-blue);border:1px solid #d1e4ff}
+.field-sp-btn2:hover{background:var(--f-blue-bg)}
+.field-sp-list{display:block}
+.field-sp-list .field-empty{margin:6px 0 0;font-size:12px;color:var(--f-ink3)}
+/* 新手视图：一句人话 + 一个直接办理按钮 */
+.field-sp-line{display:flex;align-items:center;gap:8px;margin-top:6px;padding:7px 8px 7px 10px;
+  background:#fff;border:1px solid var(--f-line);border-radius:10px;box-shadow:var(--f-shadow-sm)}
+.field-sp-line span{flex:1;min-width:0;font-size:12.5px;line-height:1.5;color:var(--f-ink);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.field-sp-go{flex-shrink:0;height:28px;padding:0 12px;border:0;border-radius:999px;
+  background:var(--f-blue);color:#fff;font:11.5px/1 inherit;font-weight:600;cursor:pointer;white-space:nowrap}
+.field-sp-go:hover{background:#1558c9}
+.field-sp-more{margin-top:6px;width:100%;padding:7px;border:1px dashed var(--f-line);
+  border-radius:10px;background:#fbfcfe;color:var(--f-blue);font:12px/1.4 inherit;cursor:pointer}
+.field-sp-more:hover{background:var(--f-blue-bg);border-color:#d1e4ff}
+.field-sp-next{margin:10px 0 0;padding-top:8px;border-top:1px solid var(--f-line);
+  font-size:11px;line-height:1.6;color:var(--f-ink3);display:flex;align-items:center;gap:6px}
+.field-sp-next .field-wf-link{margin-left:auto;padding-left:0;border:0}
+
+@media(max-width:699px){
+  /* 手机上气象在 top:122px；抽屉压在中间区域，底部让开常驻条与七环节 */
+  .field-todo{top:292px;right:10px;left:58px;bottom:168px;width:auto;border-radius:16px}
+  .field-step-panel{top:292px;right:10px;left:58px;bottom:168px;width:auto;border-radius:16px}
+  .field-todo-body{padding:2px 10px 10px}
+  .field-row h4{white-space:normal;overflow:visible;font-size:13px}
+  .field-act .lz-btn{width:100%;height:40px;line-height:1;font-size:13.5px}
+  .field-five{grid-template-columns:minmax(0,1fr)}
+  .field-ribbon{gap:9px}
+  .field-ribbon>div:first-child{display:none}
+  .field-pill{height:34px;padding:0 11px;font-size:12px}
+  .field-next{left:10px;right:10px;bottom:146px;width:auto;transform:none;padding:11px 12px}
+  .field-next .lz-btn{height:40px;font-size:12.5px;padding:0 14px}
+  .field-dock{left:8px;right:8px;bottom:8px;border-radius:18px;padding:9px 10px;min-height:0}
+  .field-wf-link{font-size:11px;padding-left:8px}
+}

@@ -1,0 +1,141 @@
+# Campaign-level drill script: 72-hour Hanjiang-upstream forest fire (P9-T1).
+# Pure scenario DATA — the world evolves here; command policy lives in code
+# (GeneralSurrogate). Sensor observations flow the ingestion path and can only
+# ever reach OBSERVED; authorized field-recon reports are the only channel
+# that may raise a claim to VERIFIED (ingestion is not verification).
+
+schema_version: 1
+campaign_id: hanjiang-72h
+title: 汉江上游山火72小时战役级演练
+domain: forest_fire
+authorized_sources: ["sensor-feed", "recon-alpha"]
+
+days:
+  - day: 1
+    label: 恶化与升级
+    waves:
+      - wave_id: w1-h01
+        hours_elapsed: 1
+        label: 初始态势建立
+        observations:
+          - site_id: sx-hanjiang-001
+            metric: water_level_m
+            unit: m
+            value: 3.4
+            observed_at: "2026-08-20T09:00:00+08:00"
+          - site_id: sx-weather-01
+            metric: wind_speed_m_s
+            unit: m/s
+            value: 6.0
+            observed_at: "2026-08-20T09:20:00+08:00"
+          - site_id: sx-weather-01
+            metric: temperature_c
+            unit: C
+            value: 29.0
+            observed_at: "2026-08-20T09:30:00+08:00"
+        field_reports: []
+        outcomes:
+          verify-conditions:
+            outcome: succeeded
+            observations: ["侦察小组完成对备选路线与水源的初步踏勘记录"]
+
+      - wave_id: w2-h08
+        hours_elapsed: 8
+        label: 风力骤增、水位回落
+        observations:
+          - site_id: sx-weather-01
+            metric: wind_speed_m_s
+            unit: m/s
+            value: 12.5
+            observed_at: "2026-08-20T16:10:00+08:00"
+          - site_id: sx-hanjiang-001
+            metric: water_level_m
+            unit: m
+            value: 2.2
+            observed_at: "2026-08-20T16:15:00+08:00"
+          - site_id: sx-weather-01
+            metric: temperature_c
+            unit: C
+            value: 33.0
+            observed_at: "2026-08-20T16:20:00+08:00"
+        field_reports: []
+        outcomes:
+          maintain-readiness:
+            outcome: succeeded
+            observations: ["两支队伍保持一线待命，通信畅通"]
+
+      - wave_id: w3-h14
+        hours_elapsed: 14
+        label: 侦察分队核实条件
+        observations: []
+        field_reports:
+          - subject: water:W1
+            value: available
+            status: verified
+            evidence_id: evidence-recon-w3-water
+            summary: 侦察分队现场核实汉江取水点可用，吊装与管线架设条件具备。
+          - subject: route:R2
+            value: passable
+            status: verified
+            evidence_id: evidence-recon-w3-route
+            summary: 侦察分队核实东侧备选路线全程通行，桥涵承压满足装备要求。
+        outcomes:
+          prepare-approach-r2:
+            first:
+              outcome: timeout
+              observations: ["突击行动开始后通信中断，结果无法确认，需重新核对"]
+            retry:
+              answer: 通信已恢复并完成双重核查，批准恢复行动。
+              outcome: succeeded
+              observations: ["恢复通信后确认：队伍抵达预定隔离带，火头推进受阻"]
+
+      - wave_id: w4-h24-end-of-day
+        hours_elapsed: 24
+        label: 第一日收束复盘
+        observations:
+          - site_id: sx-weather-01
+            metric: temperature_c
+            unit: C
+            value: 24.0
+            observed_at: "2026-08-21T07:50:00+08:00"
+        field_reports: []
+        outcomes:
+          maintain-readiness:
+            outcome: succeeded
+            observations: ["夜间无异常，隔离带保持完整"]
+
+  - day: 2
+    label: 处置与收束
+    waves:
+      - wave_id: w5-h32
+        hours_elapsed: 32
+        label: 火势受控确认
+        observations:
+          - site_id: sx-weather-01
+            metric: wind_speed_m_s
+            unit: m/s
+            value: 4.0
+            observed_at: "2026-08-21T16:00:00+08:00"
+        field_reports:
+          - subject: fire:trend
+            value: controlled
+            status: verified
+            evidence_id: evidence-recon-w5-fire
+            summary: 前指航空与地面双源核实：火线无推进，余火清理完毕，趋势受控。
+        outcomes:
+          prepare-approach-r2:
+            outcome: succeeded
+            observations: ["清扫组完成余火清理验收"]
+          maintain-readiness:
+            outcome: succeeded
+            observations: ["梯队转入监护态势"]
+
+      - wave_id: w6-h56-final
+        hours_elapsed: 56
+        label: 战役收束
+        observations: []
+        field_reports: []
+        outcomes:
+          maintain-readiness:
+            outcome: succeeded
+            observations: ["监护48小时无复燃，战役目标达成"]

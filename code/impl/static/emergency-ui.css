@@ -1,0 +1,37 @@
+/* Emergency presentation only. Hidden forms retain their fields and authority checks. */
+[data-emergency-page]{max-width:1000px;margin:auto;padding:16px 20px 40px!important}
+[data-emergency-page] [hidden],#cmd-page [hidden]{display:none!important}
+.emergency-page-title h1{font-size:24px;margin:4px 0 8px}.emergency-page-title p{color:#516173;margin:0 0 14px}
+.emergency-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}
+.emergency-nav label,.emergency-choice{display:flex;align-items:center;gap:10px;font-weight:600}
+.emergency-choice{padding:8px 0;flex-wrap:wrap}.emergency-choice select{flex:1;min-width:180px;max-width:100%}
+[data-emergency-page] button,[data-emergency-page] .lz-btn,[data-emergency-page] select,
+#cmd-page .sand-float button,#cmd-page .sand-float select,#cmd-page .command-sop-panel button,
+#cmd-page .command-toolbar button,#cmd-page .command-plan-rail button,#cmd-page summary,
+[data-emergency-page] summary,.emergency-nav a{min-height:44px;box-sizing:border-box;font-size:15px;line-height:1.4}
+[data-emergency-page] button,[data-emergency-page] .lz-btn,#cmd-page .sand-float button,
+#cmd-page .command-sop-panel button,#cmd-page .command-plan-rail button{padding:10px 15px;border-radius:8px;cursor:pointer;white-space:normal}
+[data-emergency-page] input:not([type=hidden]):not([type=checkbox]):not([type=radio]),[data-emergency-page] textarea,
+#cmd-page .sand-float input:not([type=hidden]):not([type=checkbox]):not([type=radio]):not([type=range]),#cmd-page .sand-float textarea,
+.emergency-choice select,.emergency-nav select{min-height:44px;font-size:16px;max-width:100%;box-sizing:border-box;padding:9px;border:1px solid #b7c7d2;border-radius:7px}
+[data-emergency-page] form{display:grid;gap:12px;margin:12px 0}[data-emergency-page] form label{display:grid;gap:6px}
+[data-emergency-page] form label:has(input[type=checkbox]),[data-emergency-page] form label:has(input[type=radio]){display:flex;align-items:center;min-height:44px;gap:10px}
+[data-emergency-page] input[type=checkbox],#cmd-page input[type=checkbox]{width:20px;height:20px;flex-shrink:0}
+[data-emergency-page] details,#cmd-page .emergency-details{border-top:1px solid #dce4eb;padding:4px 0;margin:8px 0}
+[data-emergency-page] summary,#cmd-page summary{cursor:pointer;align-content:center;color:#284c68;padding:8px 4px}
+.emergency-task-head h2{font-size:21px;margin:0 0 8px}.emergency-progress{padding:10px 12px;background:#eaf3fa;border-radius:8px;color:#1d4a6b}
+.emergency-task-summary{padding:12px;border-bottom:1px solid #e0e7eb}.emergency-task-summary span{margin-left:12px}
+#cmd-page .sand-float{max-width:calc(100vw - 32px);width:min(680px,calc(100vw - 32px))}
+#cmd-page .sand-float-body{font-size:15px;line-height:1.6;padding:14px 18px 20px}
+#cmd-page .sand-float-head{min-height:48px}#cmd-page .sand-float-head button{min-width:44px;padding:6px}
+#cmd-page .emergency-short{margin:8px 0}#cmd-page .emergency-details p{white-space:pre-wrap;overflow-wrap:anywhere}
+#cmd-page .emergency-risk{border-left:4px solid #c97b20;padding:8px 12px;background:#fff6e7;margin:10px 0}
+#cmd-page .command-sop-actions{display:flex;gap:8px;flex-wrap:wrap}#cmd-page .command-sop-actions>button:first-child{background:#1666a5;color:white}
+#cmd-page .command-recon-form label{display:grid;gap:6px;margin:10px 0}#cmd-page .command-recon-form label:has(input[type=checkbox]){display:flex;align-items:center;min-height:44px}
+#cmd-page .command-recon-form textarea{min-height:88px}#cmd-page .sop-path small{display:none}
+#cmd-page .cmd-plan-actions{display:block}
+#cmd-page .command-plan-rail article{padding:12px}#cmd-page .command-plan-rail article>p{margin:8px 0}
+#cmd-page .cmd-mapbar .cmd-toolgroup{flex-wrap:wrap}#cmd-page .cmd-mapbar .cmd-toolgroup button{min-width:74px}
+#cmd-page .emergency-choice{position:relative;z-index:1;background:#f6f9fc;border-radius:8px;padding:10px}
+#cmd-page .sand-float [role=status],#cmd-page .command-review-limit{overflow-wrap:anywhere}
+@media(max-width:760px){[data-emergency-page]{padding:12px!important}.emergency-nav{align-items:stretch;flex-direction:column}.emergency-nav label{flex-wrap:wrap}#cmd-page .sand-float-body{padding:12px}.emergency-choice{align-items:stretch;flex-direction:column}.emergency-choice select{width:100%}}

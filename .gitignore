@@ -1,0 +1,52 @@
+# ------------------------------------------------------------------
+# 大型/可重建目录：不入库
+# ------------------------------------------------------------------
+# 演示数据（首次启动会从 release 重新生成）
+code/demo_data/
+release/
+code/.p00-runs/
+code/_recycle_scripts/
+
+# 证据目录：里面是整份源码快照/测试运行副本，几百 MB，不入库
+docs/开发/连续收口证据_*/
+docs/开发/*证据_*/
+docs/开发/retained-runs/
+docs/**/source/
+docs/**/guard/
+
+# 安卓工具链与签名（体积大，且密钥绝不能入库）
+.android-tools/
+.android-signing/
+code/android-captain/build/
+code/android-captain/build-*/
+code/android-captain/out/
+code/android/**/*.apk
+*.apk
+*.jks
+*.keystore
+
+# 运行产物
+*.log
+*.db
+*.db-wal
+*.db-shm
+check-result.txt
+fast-check-result.txt
+mid-check-result.txt
+gate-result.txt
+pack-result.txt
+compare-old-result.txt
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# 编辑器/系统
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store

@@ -1,0 +1,8 @@
+# 破局智援参谋：无密钥、默认关闭模型联网的配置示例。
+# 只复制到独立发行副本的 impl/config/settings.yaml；不要覆盖运行配置。
+# "null" 必须加引号：YAML 的裸 null 会被解析成空值。
+network_enabled: false
+llm_provider: "null"
+llm_model: ""
+llm_base_url: ""
+llm_timeout_seconds: 30
